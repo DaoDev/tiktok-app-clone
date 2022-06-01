@@ -1,8 +1,17 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import classNames from 'classnames/bind';
 import Tippy from '@tippyjs/react/headless';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCircleQuestion, faCircleXmark, faEarthAsia, faEllipsisVertical, faKeyboard, faMagnifyingGlass, faSignIn, faSpinner } from '@fortawesome/free-solid-svg-icons';
+import {
+    faCircleQuestion,
+    faCircleXmark,
+    faEarthAsia,
+    faEllipsisVertical,
+    faKeyboard,
+    faMagnifyingGlass,
+    faSignIn,
+    faSpinner,
+} from '@fortawesome/free-solid-svg-icons';
 
 import { Wrapper as PopperWrapper } from '../../Popper';
 import styles from './Header.module.scss';
@@ -15,40 +24,56 @@ const cx = classNames.bind(styles);
 
 const MENU_ITEMS = [
     {
-        icon:<FontAwesomeIcon icon={faEarthAsia}/>,
-        title: 'English'
+        icon: <FontAwesomeIcon icon={faEarthAsia} />,
+        title: 'English',
+        children: {
+            title: 'Language',
+            data: [
+                { type: 'language', code: 'en', title: 'English' },
+                { type: 'language', code: 'vn', title: 'Vietnamese' },
+            ],
+        },
     },
     {
-        icon:<FontAwesomeIcon icon={faCircleQuestion}/>,
+        icon: <FontAwesomeIcon icon={faCircleQuestion} />,
         title: 'Feedback and help',
-        to:'/feedback'
+        to: '/feedback',
     },
     {
-        icon:<FontAwesomeIcon icon={faKeyboard}/>,
-        title: 'Keyboard shortcuts'
+        icon: <FontAwesomeIcon icon={faKeyboard} />,
+        title: 'Keyboard shortcuts',
     },
-]
+];
 
 function Header(props) {
     const [serachResult, setSerachResult] = useState([]);
 
-    useEffect(() => {
-        setTimeout(() => {
-            setSerachResult([1, 2]);
-        }, 0);
-    }, []);
+    const handleMenuChange = (menuItem) => {
+        console.log(menuItem);
+        switch (menuItem.type) {
+            case 'language':
+                //Handle change language
+                break;
+
+            default:
+                break;
+        }
+    };
 
     return (
         <header className={cx('wrapper')}>
             <div className={cx('inner')}>
                 <img src={images.logo} alt="TikTok" />
                 <Tippy
-                    interactive={true}
-                    visible={serachResult.length > 0}
+                    interactive
+                    visible={serachResult > 0}
                     render={(attrs) => (
                         <PopperWrapper>
                             <div className={cx('search-result')}>
                                 <h4 className={cx('search-title')}>Accounts</h4>
+                                <AccountItem />
+                                <AccountItem />
+                                <AccountItem />
                                 <AccountItem />
                             </div>
                         </PopperWrapper>
@@ -70,12 +95,12 @@ function Header(props) {
                     </div>
                 </Tippy>
                 {/* Action */}
-                <div className={cx('action')}>
+                <div className={cx('actions')}>
                     <Button text>Upload</Button>
                     <Button primary rightIcon={<FontAwesomeIcon icon={faSignIn} />}>
                         Login
                     </Button>
-                    <Menu items={MENU_ITEMS}>
+                    <Menu items={MENU_ITEMS} onChange={handleMenuChange}>
                         <button className={cx('more-btn')}>
                             <FontAwesomeIcon icon={faEllipsisVertical} />
                         </button>
